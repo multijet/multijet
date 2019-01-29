@@ -208,7 +208,7 @@ class RocketFuel:
             elif cmd[:8] == 'linkdown':
                 for r in self.redis_clients:
                     r.publish('cmd', cmd)
-            elif cmd[:8] == 'linkup':
+            elif cmd[:6] == 'linkup':
                 for r in self.redis_clients:
                     r.publish('cmd', cmd)
 
