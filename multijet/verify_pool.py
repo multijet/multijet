@@ -37,6 +37,8 @@ class VerifyPool:
             frules = cp.get_rules_group_by_output()
             if in_port not in frules:
                 return
+            if route[-1] == platform.node():
+                return
             space = Space(areas=msg['data']['space'])
             space.multiply(frules[in_port])
             if len(space.areas) == 0:
