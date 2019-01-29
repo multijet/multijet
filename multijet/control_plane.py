@@ -14,6 +14,13 @@ class ControlPlane:
         self.ecs = []
         self.seq = 0
 
+    def add_rule(self, rule):
+        for r in self.rules:
+            if json.dumps(r['match']) == json.dumps(rule['match']):
+                r['action'] = rule['action']
+                return
+        self.rules.append(rule)
+
     def set_rules(self, rules):
         self.rules = rules
         self.ecs = []
@@ -53,6 +60,6 @@ class ControlPlane:
         self.ecs.append({'route': route, 'space': space})
 
     def dump_ecs(self):
-        log('ecs count: ' + str(len(self.ecs)))
+        log(str(self.id) + ' ecs count: ' + str(len(self.ecs)))
         for ec in self.ecs:
             log(ec['route'])

@@ -195,14 +195,23 @@ class RocketFuel:
             if cmd == 'init':
                 for r in self.redis_clients:
                     r.publish('cmd', 'init')
+            elif cmd == 'addcp':
+                for r in self.redis_clients:
+                    r.publish('cmd', 'addcp')
             elif cmd == 'verify':
                 for r in self.redis_clients:
                     r.publish('cmd', 'verify')
-
             elif cmd == 'compose':
                 reach = raw_input('reach: ')
                 for r in self.redis_clients:
                     r.publish('cmd', 'compose:' + reach)
+            elif cmd[:8] == 'linkdown':
+                for r in self.redis_clients:
+                    r.publish('cmd', cmd)
+            elif cmd[:8] == 'linkup':
+                for r in self.redis_clients:
+                    r.publish('cmd', cmd)
+
 
 
 if __name__ == '__main__':

@@ -1,4 +1,6 @@
 import json
+import os
+import platform
 
 import redis
 from ryu.base import app_manager
@@ -30,7 +32,7 @@ class Multijet(app_manager.RyuApp):
         t = ApiServer(self.on_trigger)
         t.start()
 
-        self.cps = [ControlPlane(100)]
+        self.cps = [ControlPlane(10), ControlPlane(100)]
 
         self.ds = redis.Redis(host='localhost', port=6379, db=0)
         p = self.ds.pubsub()
@@ -41,7 +43,7 @@ class Multijet(app_manager.RyuApp):
 
     def ds_add_rule_handler(self, msg):
         rule = json.loads(msg['data'])
-        self.get_cp_by_id(100).rules.append(rule)
+        self.get_cp_by_id(100).add_rule(rule)
 
     def ds_cmd_handler(self, msg):
         cmd = msg['data']
@@ -49,8 +51,23 @@ class Multijet(app_manager.RyuApp):
             self.get_cp_by_id(100).build_space()
         elif cmd == 'verify':
             self.verify_pool.work(self.get_cp_by_id(100))
+            self.verify_pool.work(self.get_cp_by_id(10))
+        elif cmd == 'addcp': # we copy ospf rules as new cp currently for test
+            self.dp.send_msg(self.dp.ofproto_parser.OFPFlowStatsRequest(datapath=self.dp))
         elif cmd[:7] == 'compose':
             self.composer.compose(cmd[8:])
+        elif cmd[:8] == 'linkdown':
+            if cmd.split()[1] == platform.node():
+                port = cmd.split()[2]
+                cmd = 'ifconfig i' + port + ' down && ifconfig e' + port + 'down'
+                os.system(cmd)
+                self.dispatcher.set_selector_table(100)
+        elif cmd[:6] == 'linkup':
+            if cmd.split()[1] == platform.node():
+                port = cmd.split()[2]
+                cmd = 'ifconfig i' + port + ' up && ifconfig e' + port + 'up'
+                os.system(cmd)
+                self.dispatcher.set_selector_table(10)
 
     def get_cp_by_id(self, id):
         for cp in self.cps:
@@ -105,9 +122,44 @@ class Multijet(app_manager.RyuApp):
 
         if len(self.msg_buf[msg['seq']]) == msg['count']:
             payload = ''.join(self.msg_buf[msg['seq']])
-            log('received from ' + str(in_port) + ': ' + payload[:200])
+            log('received from ' + str(in_port) + ': ' + payload)
 
             parsed = json.loads(payload)
             parsed['in_port'] = in_port
 
             self.dispatcher.dispatch(parsed)
+
+    @set_ev_cls(ofp_event.EventOFPFlowStatsReply, MAIN_DISPATCHER)
+    def flow_stats_reply_handler(self, ev):
+        rules = []
+        dp = self.dp
+        ofp = dp.ofproto
+        parser = dp.ofproto_parser
+        for stat in ev.msg.body:
+            if stat.table_id != 100:  # continue if not ospf table
+                continue
+
+            match = {}
+            action = {}
+            for k, v in stat.match.items():
+                if k == 'eth_type': # ignore this type, because we didn't set it from fpm
+                    continue
+                match[k] = v
+
+            for inst in stat.instructions:
+                for act in inst.actions:
+                    if act.type == 0:
+                        action['output'] = act.port
+
+            rules.append({'match': match, 'action': action})
+
+            ofmatch = parser.OFPMatch(eth_type=2048, ipv4_dst=(match['ipv4_dst']))
+            actions = [parser.OFPActionOutput(action['output'], ofp.OFPCML_NO_BUFFER)]
+            inst = [parser.OFPInstructionActions(ofp.OFPIT_APPLY_ACTIONS, actions)]
+            msg = parser.OFPFlowMod(datapath=dp, priority=1, match=ofmatch, table_id=10,
+                                    command=ofp.OFPFC_ADD,
+                                    flags=ofp.OFPFF_SEND_FLOW_REM,
+                                    instructions=inst)
+            dp.send_msg(msg)
+
+        self.get_cp_by_id(10).set_rules(rules)
