@@ -60,13 +60,13 @@ class Multijet(app_manager.RyuApp):
         elif cmd[:8] == 'linkdown':
             if cmd.split()[1] == platform.node():
                 port = cmd.split()[2]
-                cmd = 'ifconfig i' + port + ' down && ifconfig e' + port + 'down'
+                cmd = 'ifconfig i' + port + ' down && ifconfig e' + port + ' down'
                 os.system(cmd)
                 self.dispatcher.set_selector_table(100)
         elif cmd[:6] == 'linkup':
             if cmd.split()[1] == platform.node():
                 port = cmd.split()[2]
-                cmd = 'ifconfig i' + port + ' up && ifconfig e' + port + 'up'
+                cmd = 'ifconfig i' + port + ' up && ifconfig e' + port + ' up'
                 os.system(cmd)
                 self.dispatcher.set_selector_table(10)
 

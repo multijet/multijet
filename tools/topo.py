@@ -54,6 +54,8 @@ class RocketFuel:
                     if not exists:
                         self.links.append([r, n])
 
+            print len(self.links)
+
     def start_container(self, r):
         print 'starting ' + r.id
         container = client.containers.run('snlab/dovs-quagga', detach=True, name=r.id, privileged=True, tty=True,
@@ -78,8 +80,7 @@ class RocketFuel:
         print 'create end'
 
         # for r in self.routers.values():
-        time.sleep(3) # wait for redis start
-
+        time.sleep(3)  # wait for redis start
 
         # for r in self.routers.values():
         #     print 'start multijet for ' + r.id
@@ -184,7 +185,6 @@ class RocketFuel:
         #         with open('configs/' + r.id + '/ospfd.conf', 'a') as f:
         #             f.write(' network ' + ip + ' area 0\n')
 
-
     def start_cli(self):
         for c in self.containers:
             ip = str(client.containers.get(c).attrs['NetworkSettings']['Networks']['bridge']['IPAddress'])
@@ -211,7 +211,6 @@ class RocketFuel:
             elif cmd[:8] == 'linkup':
                 for r in self.redis_clients:
                     r.publish('cmd', cmd)
-
 
 
 if __name__ == '__main__':
