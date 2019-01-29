@@ -81,10 +81,10 @@ class RocketFuel:
         time.sleep(3) # wait for redis start
 
 
-        for r in self.routers.values():
-            print 'start multijet for ' + r.id
-            c = self.containers[r.id]
-            c.exec_run('ryu-manager /multijet/multijet.py', detach=True)
+        # for r in self.routers.values():
+        #     print 'start multijet for ' + r.id
+        #     c = self.containers[r.id]
+        #     c.exec_run('ryu-manager /multijet/multijet.py', detach=True)
 
         print 'setup links'
         i = 0
