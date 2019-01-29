@@ -49,8 +49,8 @@ class Multijet(app_manager.RyuApp):
             self.get_cp_by_id(100).build_space()
         elif cmd == 'verify':
             self.verify_pool.work(self.get_cp_by_id(100))
-        elif cmd == 'compose':
-            self.composer.compose('13')
+        elif cmd[:7] == 'compose':
+            self.composer.compose(cmd[8:])
 
     def get_cp_by_id(self, id):
         for cp in self.cps:

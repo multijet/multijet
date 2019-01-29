@@ -1,4 +1,5 @@
 import json
+import netifaces
 
 from utils import log
 from space import Space
@@ -21,6 +22,17 @@ class ControlPlane:
     def get_rules_group_by_output(self):
         return self.__rules_group_by_output
 
+    # calc space only reach me, currently use dstIp=myIp
+    def get_my_space(self):
+        space = Space()
+        ifs = netifaces.interfaces()
+        for if_ in ifs:
+            addrs = netifaces.ifaddresses(if_)
+            if 2 in addrs and addrs[2][0]['addr'][:2] == '1.':
+                s = Space(match={'ipv4_dst': [addrs[2][0]['addr'], '255.255.255.0']})
+                space.plus(s)
+        return space
+
     def build_space(self):
         self.__rules_group_by_output = {}
 
@@ -29,7 +41,7 @@ class ControlPlane:
                 self.__rules_group_by_output[rule['action']['output']] = Space()
             self.__rules_group_by_output[rule['action']['output']].plus(Space(match=rule['match']))
 
-        self.add_ec([platform.node()], Space(areas=[''.ljust(336, '*')]))
+        self.add_ec([platform.node()], self.get_my_space())
         log('finish build ec')
         log(json.dumps(self.rules))
 

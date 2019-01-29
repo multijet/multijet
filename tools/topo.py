@@ -118,11 +118,11 @@ class RocketFuel:
             c = self.containers[id]
             c.exec_run('/bootstrap/ospf.py', detach=True)
 
-        for r in self.routers.values():
-            print 'start ospf for ' + r.id
-            c = self.containers[r.id]
-            c.exec_run('zebra -d -f /etc/quagga/zebra.conf --fpm_format protobuf')
-            c.exec_run('ospfd -d -f /etc/quagga/ospfd.conf')
+        # for r in self.routers.values():
+        #     print 'start ospf for ' + r.id
+        #     c = self.containers[r.id]
+        #     c.exec_run('zebra -d -f /etc/quagga/zebra.conf --fpm_format protobuf')
+        #     c.exec_run('ospfd -d -f /etc/quagga/ospfd.conf')
 
         for r in self.routers.values():
             print 'start fpm for ' + r.id
@@ -187,8 +187,9 @@ class RocketFuel:
                     r.publish('cmd', 'verify')
 
             elif cmd == 'compose':
+                reach = raw_input('reach: ')
                 for r in self.redis_clients:
-                    r.publish('cmd', 'compose')
+                    r.publish('cmd', 'compose:' + reach)
 
 
 if __name__ == '__main__':
