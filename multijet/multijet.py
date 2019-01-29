@@ -105,7 +105,7 @@ class Multijet(app_manager.RyuApp):
 
         if len(self.msg_buf[msg['seq']]) == msg['count']:
             payload = ''.join(self.msg_buf[msg['seq']])
-            log('received from ' + str(in_port) + ': ' + payload)
+            log('received from ' + str(in_port) + ': ' + payload[:200])
 
             parsed = json.loads(payload)
             parsed['in_port'] = in_port

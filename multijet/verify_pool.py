@@ -27,10 +27,9 @@ class VerifyPool:
                 'data': {
                     'type': 'ec',
                     'route': [platform.node()],
-                    'space': [''.ljust(336, '*')]  # self.get_init_ec_space().areas
+                    'space': cp.get_my_space().areas
                 }
             }
-            log(json.dumps(m))
             self.dispatcher.flood(json.dumps(m), self.gen_seq(cp))
         else:
             in_port = msg['in_port']
@@ -55,7 +54,6 @@ class VerifyPool:
                 }
             }
 
-            log(json.dumps(m))
             self.dispatcher.flood(json.dumps(m), self.gen_seq(cp), in_port)
 
             cp.dump_ecs()
