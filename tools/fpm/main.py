@@ -50,6 +50,9 @@ def add_flow(dst, output):
     cmd = 'ovs-ofctl add-flow s table=100,ip,nw_dst=' + dst + ',actions=' + actions
     logger.info(cmd)
     os.system(cmd)
+    cmd = 'ovs-ofctl add-flow s table=100,arp,arp_tpa=' + dst + ',actions=' + actions
+    logger.info(cmd)
+    os.system(cmd)
     r.publish('add_rule', json.dumps({
         'match': {'ipv4_dst': [dst[:-3], '255.255.255.0']},
         'action': {

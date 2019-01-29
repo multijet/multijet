@@ -15,7 +15,11 @@ class Router:
 
 
 class RocketFuel:
-    def __init__(self, filename):
+    def __init__(self, filename, host_nodes=None):
+        if host_nodes is None:
+            self.host_nodes = []
+        else:
+            self.host_nodes = host_nodes
         self.routers = {}
         self.links = []
         self.containers = {}
@@ -161,6 +165,13 @@ class RocketFuel:
                 i = 0
             i = i + 1
 
+        # for r in self.routers.values():
+        #     if r.id in self.host_nodes:
+        #         ip = '10.0.0.0/24'
+        #         with open('configs/' + r.id + '/ospfd.conf', 'a') as f:
+        #             f.write(' network ' + ip + ' area 0\n')
+
+
     def start_cli(self):
         for c in self.containers:
             ip = str(client.containers.get(c).attrs['NetworkSettings']['Networks']['bridge']['IPAddress'])
@@ -175,26 +186,17 @@ class RocketFuel:
                 for r in self.redis_clients:
                     r.publish('cmd', 'verify')
 
-            elif cmd == 'add rule':
-                node = raw_input('which node: ')
-                cp = raw_input('which control plane: ')
-                rule = raw_input(
-                    'rule: ')  # eg: {"match": {"ipv4_dst": ["1.1.1.1", "255.255.255.0"]}, "action": {"output": 1}}
-                c = client.containers.get(node)
-                d = {
-                    'type': 'add_rule',
-                    'cp': cp,
-                    'rule': rule
-                }
-                ip = str(c.attrs['NetworkSettings']['Networks']['bridge']['IPAddress'])
-                urllib2.urlopen('http://' + ip + ':6666/?' + urllib.urlencode(d))
+            elif cmd == 'compose':
+                for r in self.redis_clients:
+                    r.publish('cmd', 'compose')
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        print 'please specify topo file'
+    if len(sys.argv) < 2:
+        print 'please specify topo file and nodes with host'
         exit()
     topofile = sys.argv[1]
+    # host_nodes = sys.argv[2].split(',')
     topo = RocketFuel(topofile)
     signal.signal(signal.SIGINT, topo.stop)
     topo.start()

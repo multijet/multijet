@@ -10,6 +10,7 @@ from ryu.ofproto import ofproto_v1_3
 from api_server import ApiServer
 from control_plane import ControlPlane
 from dispatcher import Dispatcher
+from composer import Composer
 from utils import log
 from verify_pool import VerifyPool
 
@@ -36,6 +37,8 @@ class Multijet(app_manager.RyuApp):
         p.subscribe(**{'add_rule': self.ds_add_rule_handler, 'cmd': self.ds_cmd_handler})
         p.run_in_thread(sleep_time=0.001)
 
+        self.composer = Composer(self)
+
     def ds_add_rule_handler(self, msg):
         rule = json.loads(msg['data'])
         self.get_cp_by_id(100).rules.append(rule)
@@ -46,6 +49,8 @@ class Multijet(app_manager.RyuApp):
             self.get_cp_by_id(100).build_space()
         elif cmd == 'verify':
             self.verify_pool.work(self.get_cp_by_id(100))
+        elif cmd == 'compose':
+            self.composer.compose('13')
 
     def get_cp_by_id(self, id):
         for cp in self.cps:

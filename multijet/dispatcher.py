@@ -83,3 +83,16 @@ class Dispatcher:
                                       actions=actions, data=data)
             self.dp.send_msg(out)
         log('flood finished')
+
+    def set_selector_table(self, next_table_id):
+
+        dp = self.multijet.dp
+        ofp = dp.ofproto
+        parser = dp.ofproto_parser
+        ofmatch = parser.OFPMatch()
+        inst = [parser.OFPInstructionGotoTable(next_table_id)]
+        msg = parser.OFPFlowMod(datapath=dp, priority=1, match=ofmatch, table_id=0,
+                                command=ofp.OFPFC_ADD,
+                                flags=ofp.OFPFF_SEND_FLOW_REM,
+                                instructions=inst)
+        dp.send_msg(msg)
