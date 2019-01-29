@@ -2,6 +2,7 @@ import docker
 import os, shutil, signal, time, sys, urllib2, shutil, urllib
 import utils
 import grequests
+from multiprocessing.pool import ThreadPool
 import redis
 
 client = docker.from_env()
@@ -24,6 +25,8 @@ class RocketFuel:
         self.links = []
         self.containers = {}
         self.redis_clients = []
+        self.pool = ThreadPool()
+
         with open(filename, 'r') as f:
             for line in f:
                 arr = line.split()
@@ -51,21 +54,31 @@ class RocketFuel:
                     if not exists:
                         self.links.append([r, n])
 
+    def start_container(self, r):
+        print 'starting ' + r.id
+        container = client.containers.run('snlab/dovs-quagga', detach=True, name=r.id, privileged=True, tty=True,
+                                          hostname=r.id,
+                                          volumes={os.getcwd() + '/configs/' + r.id: {'bind': '/etc/quagga'},
+                                                   os.getcwd() + '/tools/bootstrap': {'bind': '/bootstrap'},
+                                                   os.getcwd() + '/tools/fpm': {'bind': '/fpm'},
+                                                   os.getcwd() + '/multijet': {'bind': '/multijet'}},
+                                          command='/bootstrap/start.sh')
+        self.containers[r.id] = container
+
+        return 'ok'
+
     def start(self):
 
         # generate ospf config file
         self.gen_config()
 
-        for r in self.routers.values():
-            print 'starting ' + r.id
-            container = client.containers.run('snlab/dovs-quagga', detach=True, name=r.id, privileged=True, tty=True,
-                                              hostname=r.id,
-                                              volumes={os.getcwd() + '/configs/' + r.id: {'bind': '/etc/quagga'},
-                                                       os.getcwd() + '/tools/bootstrap': {'bind': '/bootstrap'},
-                                                       os.getcwd() + '/tools/fpm': {'bind': '/fpm'},
-                                                       os.getcwd() + '/multijet': {'bind': '/multijet'}},
-                                              command='/bootstrap/start.sh')
-            self.containers[r.id] = container
+        self.pool.map(self.start_container, self.routers.values())
+        self.pool.close()
+        self.pool.join()
+        print 'create end'
+
+        # for r in self.routers.values():
+
 
         for r in self.routers.values():
             print 'start multijet for ' + r.id
