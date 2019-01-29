@@ -50,9 +50,9 @@ def add_flow(dst, output):
     cmd = 'ovs-ofctl add-flow s table=100,ip,nw_dst=' + dst + ',actions=' + actions
     logger.info(cmd)
     os.system(cmd)
-    cmd = 'ovs-ofctl add-flow s table=100,arp,arp_tpa=' + dst + ',actions=' + actions
-    logger.info(cmd)
-    os.system(cmd)
+    # cmd = 'ovs-ofctl add-flow s table=100,arp,arp_tpa=' + dst + ',actions=' + actions
+    # logger.info(cmd)
+    # os.system(cmd)
     r.publish('add_rule', json.dumps({
         'match': {'ipv4_dst': [dst[:-3], '255.255.255.0']},
         'action': {
@@ -98,6 +98,12 @@ while True:
                     add_flow(dst, str(output))
                     logger.info(str(flow_count))
                     flow_count = flow_count + 1
+            elif m.delete_route:
+                dst = bytes2Ip(m.delete_route.prefix.bytes) + '/' + str(m.delete_route.prefix.length)
+                cmd = 'ovs-ofctl del-flows s table=100,ip,nw_dst=' + dst
+                logger.info(cmd)
+                os.system(cmd)
+
         except (SystemExit, KeyboardInterrupt):
             raise
         except Exception:
