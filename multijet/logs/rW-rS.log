@@ -1,0 +1,27 @@
+NXST_FLOW reply (xid=0x4):
+ cookie=0x0, duration=77.679s, table=0, n_packets=4, n_bytes=4489, idle_age=22, priority=44444,ip,nw_proto=143 actions=CONTROLLER:65535
+ cookie=0x0, duration=81.313s, table=0, n_packets=33, n_bytes=3262, idle_age=2, in_port=2 actions=output:1
+ cookie=0x0, duration=81.300s, table=0, n_packets=33, n_bytes=3122, idle_age=2, in_port=4 actions=output:3
+ cookie=0x0, duration=81.288s, table=0, n_packets=30, n_bytes=3168, idle_age=1, in_port=6 actions=output:5
+ cookie=0x0, duration=81.276s, table=0, n_packets=35, n_bytes=3650, idle_age=1, in_port=8 actions=output:7
+ cookie=0x0, duration=81.310s, table=0, n_packets=29, n_bytes=3110, idle_age=2, ip,in_port=1,nw_proto=89 actions=output:2
+ cookie=0x0, duration=81.297s, table=0, n_packets=30, n_bytes=3268, idle_age=2, ip,in_port=3,nw_proto=89 actions=output:4
+ cookie=0x0, duration=81.285s, table=0, n_packets=24, n_bytes=2548, idle_age=1, ip,in_port=5,nw_proto=89 actions=output:6
+ cookie=0x0, duration=81.274s, table=0, n_packets=24, n_bytes=2364, idle_age=1, ip,in_port=7,nw_proto=89 actions=output:8
+ cookie=0x0, duration=81.306s, table=0, n_packets=3, n_bytes=126, idle_age=11, arp,arp_tpa=1.0.0.1 actions=output:2
+ cookie=0x0, duration=81.303s, table=0, n_packets=0, n_bytes=0, idle_age=81, ip,nw_dst=1.0.0.1 actions=output:2
+ cookie=0x0, duration=81.293s, table=0, n_packets=2, n_bytes=84, idle_age=36, arp,arp_tpa=1.0.1.1 actions=output:4
+ cookie=0x0, duration=81.290s, table=0, n_packets=0, n_bytes=0, idle_age=81, ip,nw_dst=1.0.1.1 actions=output:4
+ cookie=0x0, duration=81.282s, table=0, n_packets=2, n_bytes=84, idle_age=36, arp,arp_tpa=1.0.2.1 actions=output:6
+ cookie=0x0, duration=81.279s, table=0, n_packets=0, n_bytes=0, idle_age=81, ip,nw_dst=1.0.2.1 actions=output:6
+ cookie=0x0, duration=81.271s, table=0, n_packets=2, n_bytes=84, idle_age=36, arp,arp_tpa=1.0.3.1 actions=output:8
+ cookie=0x0, duration=81.268s, table=0, n_packets=0, n_bytes=0, idle_age=81, ip,nw_dst=1.0.3.1 actions=output:8
+ cookie=0x0, duration=8.309s, table=0, n_packets=0, n_bytes=0, idle_age=8, priority=1 actions=resubmit(,100)
+ cookie=0x0, duration=79.339s, table=100, n_packets=0, n_bytes=0, idle_age=79, ip,nw_dst=1.0.0.0/24 actions=output:1
+ cookie=0x0, duration=79.335s, table=100, n_packets=0, n_bytes=0, idle_age=79, ip,nw_dst=1.0.1.0/24 actions=output:3
+ cookie=0x0, duration=79.330s, table=100, n_packets=0, n_bytes=0, idle_age=79, ip,nw_dst=1.0.2.0/24 actions=output:5
+ cookie=0x0, duration=79.326s, table=100, n_packets=0, n_bytes=0, idle_age=79, ip,nw_dst=1.0.3.0/24 actions=output:7
+ cookie=0x0, duration=32.060s, table=100, n_packets=0, n_bytes=0, idle_age=32, ip,nw_dst=1.0.4.0/24 actions=output:1
+ cookie=0x0, duration=32.012s, table=100, n_packets=0, n_bytes=0, idle_age=32, ip,nw_dst=1.0.5.0/24 actions=output:7
+ cookie=0x0, duration=26.498s, table=100, n_packets=0, n_bytes=0, idle_age=32, ip,nw_dst=1.0.6.0/24 actions=output:1
+ cookie=0x0, duration=26.493s, table=100, n_packets=0, n_bytes=0, idle_age=32, ip,nw_dst=1.0.7.0/24 actions=output:5

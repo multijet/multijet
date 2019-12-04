@@ -1,0 +1,6 @@
+rS @Vienna,+Austria + bb	(9) &5 -> <rA>  =atvie101-tc-p2-0.ebone.net r0
+rA @Vienna,+Austria + bb	(9) &5 -> <rB> <rW>  =atvie101-tc-p2-0.ebone.net r0
+rB @Vienna,+Austria + bb	(9) &5 -> <rA> <rC> <rW>  =atvie101-tc-p2-0.ebone.net r0
+rC @Vienna,+Austria + bb	(9) &5 -> <rB> <rD> <rW>  =atvie101-tc-p2-0.ebone.net r0
+rD @Vienna,+Austria + bb	(9) &5 -> <rC> <rW>  =atvie101-tc-p2-0.ebone.net r0
+rW @Vienna,+Austria + bb (9) &5 -> <rA> <rB> <rC> <rD>  =atvie101-tc-p2-0.ebone.net r1

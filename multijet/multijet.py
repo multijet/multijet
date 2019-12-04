@@ -50,13 +50,13 @@ class Multijet(app_manager.RyuApp):
         if cmd == 'init':
             self.get_cp_by_id(100).build_space()
         elif cmd == 'verify':
-            self.verify_pool.work(self.get_cp_by_id(100))
-            # self.verify_pool.work(self.get_cp_by_id(10))
+            #self.verify_pool.work(self.get_cp_by_id(100))
+            self.verify_pool.work(self.get_cp_by_id(10))
         elif cmd == 'addcp': # we copy ospf rules as new cp currently for test
             self.dp.send_msg(self.dp.ofproto_parser.OFPFlowStatsRequest(datapath=self.dp))
         elif cmd[:7] == 'compose':
             self.dispatcher.set_selector_table(10)
-            # self.composer.compose(cmd[8:])
+            self.composer.compose(cmd[8:])
         elif cmd[:8] == 'linkdown':
             if cmd.split()[1] == platform.node():
                 port = cmd.split()[2]

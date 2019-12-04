@@ -105,7 +105,7 @@ class RocketFuel:
                 l[0].port_offset) + ' type=internal')
 
             ip = '1.' + str(j) + '.' + str(i) + '.1/24'
-            utils.nsenter_run(src_pid, 'ifconfig i' + str(l[0].port_offset) + ' ' + ip)
+            utils.nsenter_run(src_pid, 'ifconfig i' + str(l[0].port_offset) + ' ' + ip + ' hw ether 76:00:00:00:00:01')
             utils.nsenter_run(src_pid, 'ifconfig e' + str(l[0].port_offset) + ' 0.0.0.0')
 
             print 'setup links for ' + str(l[1].id)
@@ -115,7 +115,7 @@ class RocketFuel:
                               'ovs-vsctl add-port s i' + str(l[1].port_offset) + ' -- set interface i' + str(
                                   l[1].port_offset) + ' type=internal')
             ip = '1.' + str(j) + '.' + str(i) + '.2/24'
-            utils.nsenter_run(dst_pid, 'ifconfig i' + str(l[1].port_offset) + ' ' + ip)
+            utils.nsenter_run(dst_pid, 'ifconfig i' + str(l[1].port_offset) + ' ' + ip + ' hw ether 76:00:00:00:00:01')
             utils.nsenter_run(dst_pid, 'ifconfig e' + str(l[1].port_offset) + ' 0.0.0.0')
 
             l[0].port_offset = l[0].port_offset + 1
@@ -192,6 +192,13 @@ class RocketFuel:
 
         while True:
             cmd = raw_input('multijet> ')
+            if cmd == 'dump':
+                dst = raw_input('dst: ')
+                for id in self.routers:
+                    c = self.containers[id]
+                    r = c.exec_run('/bin/sh -c "ovs-ofctl dump-flows s > /multijet/logs/%s-%s.log"' % (id, dst), stream=True, demux=False)
+                    print r.output
+
             if cmd == 'init':
                 for r in self.redis_clients:
                     r.publish('cmd', 'init')

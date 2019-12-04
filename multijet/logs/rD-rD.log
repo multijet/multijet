@@ -1,0 +1,19 @@
+NXST_FLOW reply (xid=0x4):
+ cookie=0x0, duration=61.957s, table=0, n_packets=3, n_bytes=2844, idle_age=12, priority=44444,ip,nw_proto=143 actions=CONTROLLER:65535
+ cookie=0x0, duration=64.892s, table=0, n_packets=23, n_bytes=2010, idle_age=5, in_port=2 actions=output:1
+ cookie=0x0, duration=64.879s, table=0, n_packets=32, n_bytes=3196, idle_age=5, in_port=4 actions=output:3
+ cookie=0x0, duration=64.889s, table=0, n_packets=22, n_bytes=2268, idle_age=5, ip,in_port=1,nw_proto=89 actions=output:2
+ cookie=0x0, duration=64.876s, table=0, n_packets=28, n_bytes=3120, idle_age=5, ip,in_port=3,nw_proto=89 actions=output:4
+ cookie=0x0, duration=64.884s, table=0, n_packets=2, n_bytes=84, idle_age=20, arp,arp_tpa=1.0.3.2 actions=output:2
+ cookie=0x0, duration=64.881s, table=0, n_packets=0, n_bytes=0, idle_age=64, ip,nw_dst=1.0.3.2 actions=output:2
+ cookie=0x0, duration=64.873s, table=0, n_packets=2, n_bytes=84, idle_age=20, arp,arp_tpa=1.0.5.1 actions=output:4
+ cookie=0x0, duration=64.870s, table=0, n_packets=0, n_bytes=0, idle_age=64, ip,nw_dst=1.0.5.1 actions=output:4
+ cookie=0x0, duration=5.266s, table=0, n_packets=0, n_bytes=0, idle_age=5, priority=1 actions=resubmit(,100)
+ cookie=0x0, duration=63.049s, table=100, n_packets=0, n_bytes=0, idle_age=63, ip,nw_dst=1.0.3.0/24 actions=output:1
+ cookie=0x0, duration=63.043s, table=100, n_packets=0, n_bytes=0, idle_age=63, ip,nw_dst=1.0.5.0/24 actions=output:3
+ cookie=0x0, duration=20.741s, table=100, n_packets=0, n_bytes=0, idle_age=20, ip,nw_dst=1.0.7.0/24 actions=output:3
+ cookie=0x0, duration=15.743s, table=100, n_packets=0, n_bytes=0, idle_age=20, ip,nw_dst=1.0.0.0/24 actions=output:1
+ cookie=0x0, duration=15.737s, table=100, n_packets=0, n_bytes=0, idle_age=20, ip,nw_dst=1.0.1.0/24 actions=output:1
+ cookie=0x0, duration=15.732s, table=100, n_packets=0, n_bytes=0, idle_age=20, ip,nw_dst=1.0.2.0/24 actions=output:1
+ cookie=0x0, duration=15.727s, table=100, n_packets=0, n_bytes=0, idle_age=15, ip,nw_dst=1.0.4.0/24 actions=output:1
+ cookie=0x0, duration=15.722s, table=100, n_packets=0, n_bytes=0, idle_age=15, ip,nw_dst=1.0.6.0/24 actions=output:1
